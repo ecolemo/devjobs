@@ -1,0 +1,48 @@
+<%inherit file="/layout.html"/>
+<%block name="title">일할 사람들</%block>
+
+<div class="row-fluid">
+    <div class="span10">
+        <form action="/jobseekers" method="get" class="well form-search">
+            <label for="field-title">직업명</label>
+            <input id="field-title" type="search" name="title" class="seach-query input-medium" value="${request.form['title']}">
+            &nbsp;
+            <label for="field-skills">보유기술</label>
+            <input id="field-skills" type="search" name="skills" class="seach-query" value="${request.form['skills']}">
+            &nbsp;
+            <input type="submit" value="찾기" class="btn btn-info">
+        </form>
+    </div>
+    <div class="span2" style="text-align: right;">
+        <a href="/jobseekers/_/new" class="btn btn-primary" style="font-size: 1.2em; padding: 10px;">구직 등록</a>
+    </div>
+</div>
+<table class="table table-striped">
+<thead>
+    <tr>
+        <th>직업</th>
+        <th>급여</th>
+        <th>근무형태</th>
+        <th>근무지역</th>
+        <th>보유기술</th>
+    </tr>
+</thead>
+
+<tbody>
+% for item in pageobj.object_list:
+    <tr>
+        <td><a href="/jobseekers/${item.id}">${item.title}</a></td>
+        <td>${item.pay_text()}</td>
+        <td>${item.worktime|_} ${item.contract|_}</td>
+        <td>${item.location_text()}</td>
+        <td>
+            % for skill in item.skill_set.all():
+                ${skill.name}
+            % endfor
+        </td>
+    </tr>
+% endfor
+</tbody>
+</table>
+    
+${self.pagination(pageobj, int(request.GET.get('page', 1)))}

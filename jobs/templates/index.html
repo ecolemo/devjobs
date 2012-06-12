@@ -1,0 +1,29 @@
+<%inherit file="/layout.html"/>
+<%block name="title">Welcome!!</%block>
+
+<div class="page-header">
+    <h1>엔지니어 전문 구인/구직 사이트</h1>
+</div>
+<div class="row-fluid">
+    <div class="span6">
+        <div class="page-header">
+            <h2><a href="/jobseekers">일할 사람</a></h2>
+        </div>
+        <form action="/jobseekers" method="get" class="well form-search">
+            <label for="field-skills">보유기술</label>
+            <input id="field-skills" type="search" name="skills" class="seach-query" >
+            &nbsp;
+            <input type="submit" value="찾기" class="btn btn-info">
+        </form>
+        <div class="" style="text-align: center;">
+            <a href="/jobseekers/_/new" class="btn btn-primary" style="font-size: 1.2em; padding: 20px;">구직 등록</a>
+        </div>
+        
+    </div>
+    <div class="span6">
+        <div class="page-header">
+            <h2>일거리</h2>
+        </div>
+        <div class="alert alert-warning">아직 만드는 중입니다.</div>
+    </div>
+</div>

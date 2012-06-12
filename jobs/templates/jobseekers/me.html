@@ -1,0 +1,67 @@
+<%inherit file="/layout.html" />
+<%block name="head">
+<script type="text/javascript" src="/static/js/showdown.js"></script>
+<script type="text/javascript" src="/static/js/jquery.observe.js"></script>
+<script type="text/javascript">
+$(document.body).ready(function() {
+	var showdown = new Showdown.converter()
+	$('.description-preview div').html(showdown.makeHtml($('.description-preview pre').html()))
+	$('.description-preview pre').hide()
+})
+
+</script>
+</%block>
+
+<div class="page-header">
+    <h3>내 구직 내용</h3>
+</div>
+
+% for jobseeker in objects:
+<form action="/accounts/${jobseeker.id}/action" method="post" class="well form-search">
+    <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}" />
+    <input type="button" value="수정" class="btn" onclick="alert('아직 지원되지 않는 기능입니다.')">
+    <input type="hidden" name="command" value="">
+    % if jobseeker.status == 'open':
+        <input type="button" value="구직 종료" class="btn btn-danger" onclick="this.form.command.value='close'; this.form.submit()">
+    % else:
+        <input type="button" value="구직 재개" class="btn btn-success" onclick="this.form.command.value='reopen'; this.form.submit()">
+    % endif
+</form>
+
+<table class="table table-striped">
+<tbody>
+    <tr>
+        <th style="width: 100px;">직업명</th>
+        <td>${jobseeker.title}</td>
+    </tr>
+    <tr>
+        <th>메일</th>
+        <td>${jobseeker.email}</td>
+    </tr>
+    <tr>
+        <th>급여</th>
+        <td>${jobseeker.pay_text()}</td>
+    </tr>
+    <tr>
+        <th>계약형태</th>
+        <td>${jobseeker.worktime|_} ${jobseeker.contract|_}</td>
+    </tr>
+    <tr>
+        <th>근무위치</th>
+        <td>${jobseeker.location_text()}</td>
+    </tr>
+    <tr>
+        <th>보유기술</th>
+        <td>
+            % for skill in jobseeker.skill_set.all():
+                ${skill.name}
+            % endfor
+        </td>
+    </tr>
+    <tr>
+        <th>직업 설명</th>
+        <td class="description-preview"><pre>${jobseeker.description}</pre><div></div></td>
+    </tr>
+</tbody>
+</table>
+% endfor

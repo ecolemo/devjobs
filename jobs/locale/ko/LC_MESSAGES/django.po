@@ -1,0 +1,32 @@
+msgid "part_time"
+msgstr "파트타임"
+
+msgid "full_time"
+msgstr "풀타임"
+
+msgid "free_lancer"
+msgstr "프리랜서"
+
+msgid "day"
+msgstr "하루 %s"
+
+msgid "month"
+msgstr "월 %s"
+
+msgid "year"
+msgstr "연 %s"
+
+msgid "local"
+msgstr "%s 근처"
+
+msgid "anywhere"
+msgstr "무관"
+
+msgid "remote"
+msgstr "원격근무"
+
+msgid "pay amount"
+msgstr "급여액"
+
+msgid "%s should be a number."
+msgstr "%s 값은 숫자로 입력해주세요."

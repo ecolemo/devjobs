@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<%!
+from djangobp.textutil import gettext as _
+%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+<title><%block name="title"></%block></title>
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="/static/css/style.css"/>
+<script type="text/javascript" src="/static/js/jquery-1.7.2.js"></script>
+<%block name="head">
+</%block>
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+        <a href="/" class="brand">엔지니어잡</a>
+        <ul class="nav">
+          <li ${'class="active"' if request.path.startswith('/jobseekers') else ''}>
+            <a href="/jobseekers">일할 사람</a>
+          </li>
+          <li ${'class="active"' if request.path.startswith('/jobposts') else ''}><a href="/jobposts">일거리</a></li>
+          <li ${'class="active"' if request.path.startswith('/about') else ''}><a href="/about">고객문의</a></li>
+        </ul>
+        <ul class="nav pull-right">
+            % if request.user.is_authenticated():
+                <li><a href="/accounts/me">${request.user.username}</a></li>
+                <li><a href="/accounts/_/logout">로그아웃</a></li>
+            % else:
+                <li><a href="/accounts/login">로그인</a></li>
+            % endif
+        </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top: 45px;">
+${self.body()}
+</div>
+
+</body>
+</html>
+
+<%def name="pagination(page_obj, page, adjacent_size=4)">
+<div class="pagination">
+    <ul>
+        % if page - adjacent_size > 1:
+            <li><a href="?page=1">1</a></li>
+        % endif
+        % if page - adjacent_size > 1 + 1:
+            <li class="disabled"><a>...</a></li>
+        % endif
+        % for p in range(max(1, page - adjacent_size), min(page_obj.paginator.num_pages, page + adjacent_size) + 1):
+            <li class="${'active' if page == p else ''}"><a href="?page=${p}">${p}</a></li>
+        % endfor
+        % if page + adjacent_size < page_obj.paginator.num_pages - 1:
+            <li class="disabled"><a>...</a></li>
+        % endif
+        % if page + adjacent_size < page_obj.paginator.num_pages:
+            <li><a href="?page=${page_obj.paginator.num_pages}">${page_obj.paginator.num_pages}</a></li>
+        % endif
+    </ul>
+</div>
+</%def>

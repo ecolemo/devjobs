@@ -1,0 +1,132 @@
+<%inherit file="/layout.html"/>
+<%block name="head">
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/showdown.js"></script>
+<script type="text/javascript" src="/static/js/jquery.observe.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/redmond/jquery-ui-1.8.21.custom.css"/>
+</%block>
+<div class="page-header">
+    <h3>구직 등록하기</h3>
+</div>
+% if request.flash and 'ValidationError' in request.flash:
+    <div class="alert alert-error">
+        <p>입력 항목을 채워주세요.</p>
+        % for field, message in request.flash['ValidationError'].items():
+            <script type="text/javascript">
+				$('form').ready(function() {
+                	$('input[name=${field}]').parents('.control-group').addClass('error')
+                	$('input[name=${field}]').parents('.control-group').find('.help-inline').text('${message}')
+				})
+            </script>
+        % endfor
+    </div>
+% endif
+
+<script type="text/javascript">
+	var job_title_suggest = ${job_title_suggest}
+	var skill_suggest = ${skill_suggest}
+	var showdown = new Showdown.converter()
+	function autocomplete() {
+		$('input[name=title]').autocomplete({source: job_title_suggest})
+		$('input[name=skill]').autocomplete({source: skill_suggest})
+	}
+	$('form').ready(function() {
+		autocomplete()
+		$('textarea[name=description]').observe(function() {
+			$('.description-preview').html(showdown.makeHtml(this.value))
+		})
+	})
+</script>
+<form action="/jobseekers/_/create" method="post" class="form-horizontal">
+<fieldset>
+    <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}" />
+    <div class="control-group">
+        <label class="control-label">직업명</label>
+        <div class="controls">
+            <input type="text" name="title" value="${request.form['title']}" class="span4">
+            <span class="help-inline"></span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">메일</label>
+        <div class="controls">
+            <input type="email" name="email" value="${request.form['email']}" class="span4">
+            <span class="help-inline"></span>
+            <div class="help-block"><span class="label label-warning">주의</span> 메일 주소는 로그인한 모든 사용자에게 공개됩니다.</div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">급여</label>
+        <div class="controls">
+            <select name="pay_period" class="span1">
+                <option value="day" ${request.form.selected('pay_period', 'day')}>하루</option>
+                <option value="month" ${request.form.selected('pay_period', 'month')}>월</option>
+                <option value="year" ${request.form.selected('pay_period', 'year')}>연</option>
+            </select>
+            <div class="input-append">
+                <input type="number" name="pay_amount" value="${request.form['pay_amount']}" class="span2"><span class="add-on">원</span>
+                <input type="hidden" name="pay_currency" value="KRW">
+                <span class="help-inline"></span>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">계약 형태</label>
+        <div class="controls">
+            <select name="worktime" class="span2">
+                <option value="part_time" ${request.form.selected('worktime', 'part_time')}>파트타임</option>
+                <option value="full_time" ${request.form.selected('worktime', 'full_time')}>풀타임</option>
+            </select>
+            <select name="contract" class="span2">
+                <option value="free_lancer" ${request.form.selected('contract', 'free_lancer')}>프리랜서</option>
+                <option value="company" ${request.form.selected('contract', 'company')}>법인/개인사업자 계약</option>
+                <option value="regular_employee" ${request.form.selected('contract', 'regular_employee')}>정직원</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">근무위치</label>
+        <div class="controls">
+            <select name="location_type" class="span2">
+                <option value="local" ${request.form.selected('location_type', 'local')}>지역</option>
+                <option value="anywhere" ${request.form.selected('location_type', 'anywhere')}>무관</option>
+                <option value="remote" ${request.form.selected('location_type', 'remote')}>원격만</option>
+            </select>
+            <input type="text" name="location" value="${request.form['location']}" >
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">보유기술</label>
+        % for skill in request.form.getlist('skill'):
+            <div class="controls">
+                <input type="text" name="skill" value="${skill}" class="span2">
+                <button class="btn" onclick="$(this.parentNode).remove(); return false;">x</button>
+            </div>
+        % endfor
+        <div class="controls">
+            <button class="btn" onclick="$(this.parentNode).before($('div.template div.controls')[0].cloneNode(true)); $(this).before(' '); window.autocomplete(); return false;">추가</button>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">직업 설명</label>
+        <div class="controls">
+            <textarea name="description" class="span8" style="height:100px;">${request.form['description']}</textarea>
+            <p class="help-block">자신의 업무에 대한 간략한 소개. <a href="">Markdown</a> 문법 사용 가능.</p>
+        </div>
+        <div class="controls description-preview">
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">등록</button>
+        <button type="cancel" onclick="history.back()" class="btn">취소</button>
+    </div>
+</fieldset>
+    
+</form>
+
+<div class="template" style="display:none">
+    <div class="controls">
+        <input type="text" name="skill" value="" class="span2">
+        <button class="btn" onclick="$(this.parentNode).remove(); return false;">x</button>
+    </div>
+</div>
