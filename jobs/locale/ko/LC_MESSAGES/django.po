@@ -7,6 +7,12 @@ msgstr "풀타임"
 msgid "free_lancer"
 msgstr "프리랜서"
 
+msgid "company"
+msgstr "법인/개인사업자"
+
+msgid "reqular_employee"
+msgstr "정직원"
+
 msgid "day"
 msgstr "하루 %s"
 
