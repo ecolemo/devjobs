@@ -4,7 +4,7 @@ from django.core.context_processors import csrf
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
-from djangobp.route import render_to_response
+from djangobp.makohelper import render_to_response
 from jobs.models import JobSeeker, Skill
 import simplejson
 

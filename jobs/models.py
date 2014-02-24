@@ -42,7 +42,9 @@ class JobSeeker(models.Model):
             return gettext(self.location_type)
         
     def pay_text(self):
-        return gettext(self.pay_period) % (self.pay_amount) + '원'
+        print self.pay_period, gettext(self.pay_period), self.pay_amount
+        print gettext(self.pay_period) % self.pay_amount
+        return (gettext(self.pay_period) % self.pay_amount) + '원'
 
 
     
